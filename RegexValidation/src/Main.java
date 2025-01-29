@@ -7,7 +7,7 @@ public class Main {
      */
  
     public static void main(String[] args) {
-         // Testing SSN validation
+    // Testing SSN validation
     // System.out.println(validateSSN("123-45-6789"));   // Expected: true 
     // System.out.println(validateSSN("123456789"));     // Expected: true
     // System.out.println(validateSSN("123 45 6789"));   // Expected: true
@@ -20,11 +20,16 @@ public class Main {
     // System.out.println(validatePhoneNumber("000-456-7890"));    // Expected: false
 
     // Testing Email validation
-    System.out.println(validateEmail("john.doe@example.com"));  // Expected: true 
-    System.out.println(validateEmail("john.doe@example"));       // Expected: false 
-    System.out.println(validateEmail("john.doe@.com"));        // Expected: false 
-    System.out.println(validateEmail("johndoe@example.com"));  // Expected: false 
-    System.out.println(validateEmail("john..doe@.com"));    // Expected: false 
+    // System.out.println(validateEmail("john.doe@example.com"));  // Expected: true 
+    // System.out.println(validateEmail("john.doe@example"));       // Expected: false 
+    // System.out.println(validateEmail("john.doe@.com"));        // Expected: false 
+    // System.out.println(validateEmail("johndoe@example.com"));  // Expected: false 
+    // System.out.println(validateEmail("john..doe@.com"));    // Expected: false 
+
+    //Testing name validation
+//    System.out.println(validateName("Smith,John,L"));
+//    System.out.println(validateName("Mabota,Lwazi,M"));
+
 
     // Testing Address validation
 
@@ -73,8 +78,14 @@ public class Main {
     }
 
     private static boolean validateName(String name) { 
-
-        return false; 
+        /*
+         * Name on a class roster, assuming zero or more middle initials - Last name, First name, MI (e.g. Smith, John, L
+         * Mabota, Lwazi, M
+         */
+        if(isNullOrEmpty(name)) return false;
+        name = name.trim();
+        String regex = "^[A-Z][a-zA-Z'-]*,\\s*[A-Z][a-zA-Z'-]*(,\\s*[A-Z])?$";
+        return regexChecker(regex, name);
     }
 
     private static boolean validateOddWord(String word) { 
