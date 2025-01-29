@@ -24,7 +24,7 @@ public class Main {
     System.out.println(validateEmail("john.doe@example"));       // Expected: false 
     System.out.println(validateEmail("john.doe@.com"));        // Expected: false 
     System.out.println(validateEmail("johndoe@example.com"));  // Expected: false 
-    System.out.println(validateEmail("john..doe@.com"));     
+    System.out.println(validateEmail("john..doe@.com"));    // Expected: false 
 
     // Testing Address validation
 
@@ -62,9 +62,7 @@ public class Main {
 
     
     private static boolean validateEmail(String email) { 
-        if(email == null || email.trim().isEmpty()) {
-            return false;
-        }
+        if(isNullOrEmpty(email)) return false;
         email = email.trim();
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return regexChecker(regex, email);
@@ -75,6 +73,7 @@ public class Main {
     }
 
     private static boolean validateName(String name) { 
+
         return false; 
     }
 
