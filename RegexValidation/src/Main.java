@@ -2,18 +2,32 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class Main {
+    /*
+     * grab it all and check if it matches, use greedy
+     */
  
     public static void main(String[] args) {
          // Testing SSN validation
-    System.out.println(validateSSN("123-45-6789"));   // Expected: true 
-    System.out.println(validateSSN("123456789"));  // Try this instead of "987654321"
-    System.out.println(validateSSN("000-12-3456"));   // Expected: false 
-    System.out.println(validateSSN("123-45-0000"));   // Expected: false 
-    // Testing Phone Number validation
-    System.out.println(validatePhoneNumber("(305) 555-1234"));  // Expected: true 
-    System.out.println(validatePhoneNumber("212-555-6789"));    // Expected: true 
-    System.out.println(validatePhoneNumber("911-555-1234"));    // Expected: false
-    System.out.println(validatePhoneNumber("000-456-7890"));    // Expected: false
+    // System.out.println(validateSSN("123-45-6789"));   // Expected: true 
+    // System.out.println(validateSSN("123456789"));     // Expected: true
+    // System.out.println(validateSSN("123 45 6789"));   // Expected: true
+    // System.out.println(validateSSN("000-12-3456"));   // Expected: false 
+    // System.out.println(validateSSN("123-45-0000"));   // Expected: false 
+    // // Testing Phone Number validation
+    // System.out.println(validatePhoneNumber("(305) 555-1234"));  // Expected: true 
+    // System.out.println(validatePhoneNumber("212-555-6789"));    // Expected: true 
+    // System.out.println(validatePhoneNumber("911-555-1234"));    // Expected: false
+    // System.out.println(validatePhoneNumber("000-456-7890"));    // Expected: false
+
+    // Testing Email validation
+    System.out.println(validateEmail("john.doe@example.com"));  // Expected: true 
+    System.out.println(validateEmail("john.doe@example"));       // Expected: false 
+    System.out.println(validateEmail("john.doe@.com"));        // Expected: false 
+    System.out.println(validateEmail("johndoe@example.com"));  // Expected: false 
+    System.out.println(validateEmail("john..doe@.com"));     
+
+    // Testing Address validation
+
         
     }
 
@@ -51,7 +65,9 @@ public class Main {
         if(email == null || email.trim().isEmpty()) {
             return false;
         }
-        return false; 
+        email = email.trim();
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return regexChecker(regex, email);
     }
 
     private static boolean validateMilitaryTime(String time) { 
@@ -77,16 +93,21 @@ public class Main {
          // remove leading and trailing spaces
          phoneNumber = phoneNumber.trim();
 
-         //define the regex pattern, ensures that phone number area code (XXX), seperators space ` `, dash, `-`, or dot `.`
-         // Ensures 10 digits are present
-         // Ensure country code +1 is present
-         String regex = "^\\+?1?[- .]?\\(?([2-9][0-9]{2})\\)?[- .]?([2-9][0-9]{2})[- .]?(\\d{4})$";
-         Pattern pattern = Pattern.compile(regex);
-         Matcher matcher = pattern.matcher(phoneNumber);
-
-         if(!matcher.matches()) {
-             return false;
-         }
+        //define the regex pattern, ensures that phone number area code (XXX), seperators space ` `, dash, `-`, or dot `.`
+        // Ensures 10 digits are present
+        // Ensure country code +1 is present
+        // Define regex pattern to validate US phone numbers (with extra credit)
+        String regex = 
+            "^\\+?1?" +          // Optional country code: "+1" or just "1" (can be omitted)
+            "[- .]?" +           // Optional separator after country code: "-", ".", or space
+            "\\(?([2-9][0-9]{2})\\)?" + // Valid area code: 3 digits (200-999), optional parentheses
+            "[- .]?" +           // Optional separator after area code: "-", ".", or space
+            "([2-9][0-9]{2})" +  // Valid exchange code: 3 digits (200-999), cannot start with 0 or 1
+            "[- .]?" +           // Optional separator after exchange code: "-", ".", or space
+            "(\\d{4})$";         // Last 4 digits of phone number (required)
+        if(!regexChecker(regex, phoneNumber)){
+            return false;
+        }
             // remove the non-digit characters spaces and dashes
         phoneNumber = phoneNumber.replaceAll("[^0-9]", ""); 
         // extract components
@@ -106,7 +127,14 @@ public class Main {
     ssn = ssn.trim();
 
     // Define regex pattern to check valid SSN format (with extra credit)
-    String regex = "^(?!000|666|9\\d{2})\\d{3}[- ]?(?!00)\\d{2}[- ]?(?!0000)\\d{4}$";
+    // Define regex pattern to check valid SSN format (with extra credit)
+    String regex = 
+        "^(?!000|666|9\\d{2})" +  // Area number (first 3 digits) cannot be 000, 666, or 900-999
+        "\\d{3}[- ]?" +           // Valid area number: 3 digits, optional dash or space
+        "(?!00)" +                // Group number (middle 2 digits) cannot be 00
+        "\\d{2}[- ]?" +           // Valid group number: 2 digits, optional dash or space
+        "(?!0000)" +              // Serial number (last 4 digits) cannot be 0000
+        "\\d{4}$";                // Valid serial number: exactly 4 digits, must be at end
     
     // Use regexChecker to validate format
     if (!regexChecker(regex, ssn)) {
