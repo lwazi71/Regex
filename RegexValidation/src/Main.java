@@ -17,15 +17,20 @@ public class Main {
         
     }
 
+    // helper method to check if string matches regex pattern
     private static boolean regexChecker(final String rgx, final String input){
         Pattern pattern = Pattern.compile(rgx);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
 
+    // helper method to check if string is null or empty
+    private static boolean isNullOrEmpty(String input) {
+        return input == null || input.trim().isEmpty();
+    }
+
     private static boolean validateAddress(String address) { 
         return false; 
-
 
     }
 
@@ -41,7 +46,11 @@ public class Main {
         return false; 
     }
 
+    
     private static boolean validateEmail(String email) { 
+        if(email == null || email.trim().isEmpty()) {
+            return false;
+        }
         return false; 
     }
 
@@ -64,9 +73,7 @@ public class Main {
     private static boolean validatePhoneNumber(String phoneNumber) { 
          // valid phone number (123) 456-7890 123-456-7890 123.456.7890 123456789 +1 123-456-7890
 
-         if(phoneNumber == null || phoneNumber.trim().isEmpty()) {
-             return false;
-         }
+         if(isNullOrEmpty(phoneNumber)) return false; 
          // remove leading and trailing spaces
          phoneNumber = phoneNumber.trim();
 
@@ -95,9 +102,7 @@ public class Main {
     }
 
     private static boolean validateSSN(String ssn) { 
-    if (ssn == null || ssn.trim().isEmpty()) {
-        return false;
-    }
+    if(isNullOrEmpty(ssn)) return false; 
     ssn = ssn.trim();
 
     // Define regex pattern to check valid SSN format (with extra credit)
@@ -127,13 +132,11 @@ public class Main {
 private static boolean isValidAreaNumber(int area) {
     return area != 0 && area != 666 && (area < 900 || area > 999);
 }
-
     private static boolean validateURL(String url) { 
         return false; 
     }
-
+// Extra Credit: Ensure the area code is valid according to Area code rules
 private static boolean isValidAreaCode(int areaCode){
     return areaCode >= 200 && areaCode <= 999 && areaCode != 911 && areaCode != 555 && areaCode % 100 != 00;
-
 }
 }
