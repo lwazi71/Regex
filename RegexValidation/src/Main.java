@@ -62,7 +62,16 @@ public class Main {
     }
 
     private static boolean validateDate(String date) { 
-        return false; 
+        if(isNullOrEmpty(date)) return false;
+        date = date.trim();
+        /*
+         * 04-13-2003
+         * 4/13/2003
+         * 04-13-2023
+         */
+
+        String regex = "^(0[1-9]|1[0-2])([-\\/])(0[1-9]|[12][0-9]|3[01])\\2(\\d{4})$";
+        return regexChecker(regex, date);
     }
 
     
@@ -170,9 +179,20 @@ public class Main {
 private static boolean isValidAreaNumber(int area) {
     return area != 0 && area != 666 && (area < 900 || area > 999);
 }
-    private static boolean validateURL(String url) { 
+private static boolean validateURL(String url) { 
         return false; 
     }
+
+// Helper method for leap year calculation
+private static boolean isLeapYear(int year) {
+    if(year % 4 == 0){
+        if(year % 100 == 0){
+            return year % 400 == 0;
+        }
+        return true;
+    }
+    return false;
+}
 // Extra Credit: Ensure the area code is valid according to Area code rules
 private static boolean isValidAreaCode(int areaCode){
     return areaCode >= 200 && areaCode <= 999 && areaCode != 911 && areaCode != 555 && areaCode % 100 != 00;
