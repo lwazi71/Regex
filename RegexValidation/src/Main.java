@@ -27,14 +27,27 @@ public class Main {
     // System.out.println(validateEmail("john..doe@.com"));    // Expected: false 
 
     //Testing name validation
-//    System.out.println(validateName("Smith,John,L"));
-//    System.out.println(validateName("Mabota,Lwazi,M"));
+    //System.out.println(validateName("Smith,John,L"));
+    //System.out.println(validateName("Mabota,Lwazi,M"));
 
+    //Testing date validation
+    
+    System.out.println(validateDate("02-29-2024")); // true (Valid format, leap year)
+    System.out.println(validateDate("12/31/1999")); // true (Valid format, end of year)
+    System.out.println(validateDate("06-15-2023")); // true (Valid format, mid-year)
+    System.out.println(validateDate("01/01/0001")); // true (Valid format, earliest valid year)
 
-    // Testing Address validation
-
-        
-    }
+    // Invalid format cases
+    System.out.println(validateDate("2024-02-29")); // false (YYYY-MM-DD format)
+    System.out.println(validateDate("13-10-2023")); // false (Invalid month)
+    System.out.println(validateDate("00-05-2023")); // false (Month can't be 00)
+    System.out.println(validateDate("06-00-2023")); // false (Day can't be 00)
+    System.out.println(validateDate("02/29/1900")); // false (Not a leap year)
+    
+    // Edge cases
+    System.out.println(validateDate(" 02-29-2024 ")); // true (Valid date with spaces)
+    System.out.println(validateDate("02/29/2100")); // false (2100 is not a leap year)
+}
 
     // helper method to check if string matches regex pattern
     private static boolean regexChecker(final String rgx, final String input){
@@ -62,19 +75,21 @@ public class Main {
     }
 
     private static boolean validateDate(String date) { 
-        if(isNullOrEmpty(date)) return false;
-        date = date.trim();
-        /*
-         * 04-13-2003
-         * 4/13/2003
-         * 04-13-2023
-         */
-
-        String regex = "^(0[1-9]|1[0-2])([-\\/])(0[1-9]|[12][0-9]|3[01])\\2(\\d{4})$";
-        return regexChecker(regex, date);
-    }
-
+        if (isNullOrEmpty(date)) return false;
     
+        date = date.trim();
+        String regex = "^(0?[1-9]|1[0-2])([-\\/])(0?[1-9]|[12][0-9]|3[01])\\2(\\d{4})$";
+    
+        if (!regexChecker(regex, date)) return false;
+    
+        // Since the regex is already validated, safely split the date
+        String[] parts = date.split("[-/]");
+        int month = Integer.parseInt(parts[0]); 
+        int day = Integer.parseInt(parts[1]);
+        int year = Integer.parseInt(parts[2]);
+    
+        return !(month == 2 && (day > 29 || (day == 29 && !isLeapYear(year))));
+    }
     private static boolean validateEmail(String email) { 
         if(isNullOrEmpty(email)) return false;
         email = email.trim();
