@@ -1,5 +1,7 @@
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     /*
@@ -31,27 +33,54 @@ public class Main {
     //System.out.println(validateName("Mabota,Lwazi,M"));
 
     //Testing date validation
-    System.out.println(validateDate("02-29-2024")); // ✅ Valid leap year date
-    System.out.println(validateDate("12/31/1999")); // ✅ Valid end of year date
-    System.out.println(validateDate("06-15-2023")); // ✅ Valid mid-year date
-    System.out.println(validateDate("11/30/2022")); // ✅ Valid month with 30 days
+    // System.out.println(validateDate("02-29-2024")); //  Valid leap year date
+    // System.out.println(validateDate("12/31/1999")); //  Valid end of year date
+    // System.out.println(validateDate("06-15-2023")); //  Valid mid-year date
+    // System.out.println(validateDate("11/30/2022")); //  Valid month with 30 days
 
-    System.out.println(validateDate("13-10-2023")); // ❌ Invalid month (13)
-    System.out.println(validateDate("04-31-2023")); // ❌ April has only 30 days
-    System.out.println(validateDate("02-30-2023")); // ❌ February cannot have 30 days
-    System.out.println(validateDate("06/15-2023")); // ❌ Mixed separators (- and /)
+    // System.out.println(validateDate("13-10-2023")); //  Invalid month (13)
+    // System.out.println(validateDate("04-31-2023")); //  April has only 30 days
+    // System.out.println(validateDate("02-30-2023")); //  February cannot have 30 days
+    // System.out.println(validateDate("06/15-2023")); // Mixed separators (- and /)
 
-    System.out.println(validateDate(" 02-29-2024 ")); // ✅ Valid date with spaces
-    System.out.println(validateDate("02-29-1900")); // ❌ 1900 is not a leap year
-    System.out.println(validateDate("12-31-9999")); // ✅ Valid extreme future date
-    System.out.println(validateDate("01/01/0000")); // ❌ Invalid year (0000)
+    // System.out.println(validateDate(" 02-29-2024 ")); //  Valid date with spaces
+    // System.out.println(validateDate("02-29-1900")); // 1900 is not a leap year
+    // System.out.println(validateDate("12-31-9999")); //  Valid extreme future date
+    // System.out.println(validateDate("01/01/0000")); // Invalid year (0000)
 
-    
-}
+    //Testing address validation
+//     //   //  False test cases (Wrong structure but possible addresses)
+//        System.out.println(validateAddress("123"));              // false (Missing street name & type)
+//        System.out.println(validateAddress("456 Oak xyz"));      // false (xyz is not a valid street type)
+//        System.out.println(validateAddress("789 Main"));         // false (Missing street type)
+//        System.out.println(validateAddress("01 Elm St"));        // false (Leading zero in street number)
+
+//        // Invalid test cases (Completely incorrect formats)
+//        System.out.println(validateAddress("Main St 123"));      // false (Number must be first)
+//        System.out.println(validateAddress("123*Main*St"));      // false (Special characters not allowed)
+//        System.out.println(validateAddress("123 456 789 Blvd")); // false (Street name should have letters)
+//        System.out.println(validateAddress("999 Elm Rdd"));      // false (Misspelled street type)
+// 
+//        // Valid test cases
+System.out.println(validateCityStateZip("Seattle, WA 98101"));  // ✅ true
+System.out.println(validateCityStateZip("Los Angeles, CA 90012"));  // ✅ true
+System.out.println(validateCityStateZip("Winston-Salem, NC 27101"));  // ✅ true
+System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  // ✅ true
+
+// System.out.println(validateCityStateZip("Seattle WA 98101"));  // ❌ false (Missing comma)
+// System.out.println(validateCityStateZip("San Francisco, California 94101"));  // ❌ false (Full state name not allowed)
+// System.out.println(validateCityStateZip("New York, NY10001"));  // ❌ false (No space before ZIP)
+// System.out.println(validateCityStateZip("Austin, TX 7330"));  // ❌ false (ZIP too short)
+
+// System.out.println(validateCityStateZip("12345, TX 75001"));  // 🚫 false (City cannot be a number)
+// System.out.println(validateCityStateZip("Chicago, XX 60601"));  // 🚫 false (Invalid state abbreviation)
+// System.out.println(validateCityStateZip("Miami, FL"));  // 🚫 false (Missing ZIP code)
+// System.out.println(validateCityStateZip("New York- NY 10001"));  // 🚫 false (Wrong separator)
+    }
 
     // helper method to check if string matches regex pattern
     private static boolean regexChecker(final String rgx, final String input){
-        Pattern pattern = Pattern.compile(rgx);
+        Pattern pattern = Pattern.compile(rgx, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
@@ -61,14 +90,36 @@ public class Main {
         return input == null || input.trim().isEmpty();
     }
 
-    private static boolean validateAddress(String address) { 
-        return false; 
-
-    }
-
     private static boolean validateCityStateZip(String input) { 
-        return false; 
+        if (isNullOrEmpty(input)) return false;
+        input = input.trim();
+
+        //  List of all 50 U.S. state abbreviations
+        List<String> stateAbbreviations = Arrays.asList(
+            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+            "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+        );
+
+        //  Convert list into a regex-friendly format (AL|AK|AZ|...)
+        String stateRegex = String.join("|", stateAbbreviations);
+
+        //  Build regex dynamically with all 50 states
+        String regex = "^"
+            + "[A-Z][a-z']+" //  First letter uppercase, allows apostrophes ('Connor)
+            + "(?:\\s+[A-Z][a-z']*)*" //  Allows multi-word cities, apostrophes (New York, San O'Neill)
+            + "(?:-\\s*[A-Z][a-z']+)*" //  Allows hyphenated city names (Winston-Salem)
+            + ",\\s+" //  Comma and space after city
+            + "(" + stateRegex + ")\\s" //  Only valid U.S. states
+            + "\\d{5}" //  5-digit ZIP code
+            + "(-\\d{4})?" //  Allows optional ZIP+4 format (-1234)
+            + "$";
+
+        return regexChecker(regex, input);
     }
+
 
     private static boolean validateCurrency(String currency) { 
         return false; 
@@ -93,7 +144,7 @@ public class Main {
         int day = Integer.parseInt(parts[1]);
         int year = Integer.parseInt(parts[2]);
     
-        // ✅ Fix: Ensure the year is within a valid range (e.g., 1000 - 9999)
+        //  Fix: Ensure the year is within a valid range (e.g., 1000 - 9999)
         if (year < 1000 || year > 9999) return false;
     
         // Validate months with 30 days
