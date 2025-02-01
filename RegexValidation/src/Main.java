@@ -31,22 +31,22 @@ public class Main {
     //System.out.println(validateName("Mabota,Lwazi,M"));
 
     //Testing date validation
-    
-    System.out.println(validateDate("02-29-2024")); // true (Valid format, leap year)
-    System.out.println(validateDate("12/31/1999")); // true (Valid format, end of year)
-    System.out.println(validateDate("06-15-2023")); // true (Valid format, mid-year)
-    System.out.println(validateDate("01/01/0001")); // true (Valid format, earliest valid year)
+    System.out.println(validateDate("02-29-2024")); // ✅ Valid leap year date
+    System.out.println(validateDate("12/31/1999")); // ✅ Valid end of year date
+    System.out.println(validateDate("06-15-2023")); // ✅ Valid mid-year date
+    System.out.println(validateDate("11/30/2022")); // ✅ Valid month with 30 days
 
-    // Invalid format cases
-    System.out.println(validateDate("2024-02-29")); // false (YYYY-MM-DD format)
-    System.out.println(validateDate("13-10-2023")); // false (Invalid month)
-    System.out.println(validateDate("00-05-2023")); // false (Month can't be 00)
-    System.out.println(validateDate("06-00-2023")); // false (Day can't be 00)
-    System.out.println(validateDate("02/29/1900")); // false (Not a leap year)
+    System.out.println(validateDate("13-10-2023")); // ❌ Invalid month (13)
+    System.out.println(validateDate("04-31-2023")); // ❌ April has only 30 days
+    System.out.println(validateDate("02-30-2023")); // ❌ February cannot have 30 days
+    System.out.println(validateDate("06/15-2023")); // ❌ Mixed separators (- and /)
+
+    System.out.println(validateDate(" 02-29-2024 ")); // ✅ Valid date with spaces
+    System.out.println(validateDate("02-29-1900")); // ❌ 1900 is not a leap year
+    System.out.println(validateDate("12-31-9999")); // ✅ Valid extreme future date
+    System.out.println(validateDate("01/01/0000")); // ❌ Invalid year (0000)
+
     
-    // Edge cases
-    System.out.println(validateDate(" 02-29-2024 ")); // true (Valid date with spaces)
-    System.out.println(validateDate("02/29/2100")); // false (2100 is not a leap year)
 }
 
     // helper method to check if string matches regex pattern
@@ -73,27 +73,44 @@ public class Main {
     private static boolean validateCurrency(String currency) { 
         return false; 
     }
-
     private static boolean validateDate(String date) { 
         if (isNullOrEmpty(date)) return false;
     
         date = date.trim();
-        String regex = "^(0?[1-9]|1[0-2])([-\\/])(0?[1-9]|[12][0-9]|3[01])\\2(\\d{4})$";
+        String regex = "^"  // Start of the string
+            + "(0[1-9]|1[0-2])"  // Match the month (01-12)
+            + "([-\\/])"           // Match the separator (- or /)
+            + "(0[1-9]|[12][0-9]|3[01])"  // Match the day (01-31)
+            + "\\2"                // Ensure the same separator is used
+            + "(\\d{4})"           // Match a four-digit year
+            + "$";                 // End of the string
     
         if (!regexChecker(regex, date)) return false;
     
-        // Since the regex is already validated, safely split the date
+        // Extract date components
         String[] parts = date.split("[-/]");
         int month = Integer.parseInt(parts[0]); 
         int day = Integer.parseInt(parts[1]);
         int year = Integer.parseInt(parts[2]);
     
-        return !(month == 2 && (day > 29 || (day == 29 && !isLeapYear(year))));
+        // ✅ Fix: Ensure the year is within a valid range (e.g., 1000 - 9999)
+        if (year < 1000 || year > 9999) return false;
+    
+        // Validate months with 30 days
+        if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) return false;
+    
+        // Validate February (28 or 29 days only)
+        if (month == 2) {
+            if (day > 29 || (day == 29 && !isLeapYear(year))) return false;
+        }
+    
+        return true; // Everything is valid
     }
+    
     private static boolean validateEmail(String email) { 
         if(isNullOrEmpty(email)) return false;
         email = email.trim();
-        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String regex = "^(?!.*\\.\\.)([a-zA-Z0-9._%+-]{1,64})@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
         return regexChecker(regex, email);
     }
 
