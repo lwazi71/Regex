@@ -9,7 +9,7 @@ public class Main {
      */
  
     public static void main(String[] args) {
-    // Testing SSN validation
+    //Testing SSN validation
     // System.out.println(validateSSN("123-45-6789"));   // Expected: true 
     // System.out.println(validateSSN("123456789"));     // Expected: true
     // System.out.println(validateSSN("123 45 6789"));   // Expected: true
@@ -49,33 +49,114 @@ public class Main {
     // System.out.println(validateDate("01/01/0000")); // Invalid year (0000)
 
     //Testing address validation
-//     //   //  False test cases (Wrong structure but possible addresses)
-//        System.out.println(validateAddress("123"));              // false (Missing street name & type)
-//        System.out.println(validateAddress("456 Oak xyz"));      // false (xyz is not a valid street type)
-//        System.out.println(validateAddress("789 Main"));         // false (Missing street type)
-//        System.out.println(validateAddress("01 Elm St"));        // false (Leading zero in street number)
+//   //  False test cases (Wrong structure but possible addresses)
+//   System.out.println(validateAddress("123"));              // false (Missing street name & type)
+//   System.out.println(validateAddress("456 Oak xyz"));      // false (xyz is not a valid street type)
+//   System.out.println(validateAddress("789 Main"));         // false (Missing street type)
+//   System.out.println(validateAddress("01 Elm St"));        // false (Leading zero in street number)
 
-//        // Invalid test cases (Completely incorrect formats)
-//        System.out.println(validateAddress("Main St 123"));      // false (Number must be first)
-//        System.out.println(validateAddress("123*Main*St"));      // false (Special characters not allowed)
-//        System.out.println(validateAddress("123 456 789 Blvd")); // false (Street name should have letters)
-//        System.out.println(validateAddress("999 Elm Rdd"));      // false (Misspelled street type)
+//   // Invalid test cases (Completely incorrect formats)
+//   System.out.println(validateAddress("Main St 123"));      // false (Number must be first)
+//   System.out.println(validateAddress("123*Main*St"));      // false (Special characters not allowed)
+//   System.out.println(validateAddress("123 456 789 Blvd")); // false (Street name should have letters)
+//   System.out.println(validateAddress("999 Elm Rdd"));      // false (Misspelled street type)
 // 
-//        // Valid test cases
-System.out.println(validateCityStateZip("Seattle, WA 98101"));  // ✅ true
-System.out.println(validateCityStateZip("Los Angeles, CA 90012"));  // ✅ true
-System.out.println(validateCityStateZip("Winston-Salem, NC 27101"));  // ✅ true
-System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  // ✅ true
+//  // Valid test cases
+     //System.out.println(validateCityStateZip("Seattle, WA 98101"));  //  true
+    // System.out.println(validateCityStateZip("Los Angeles, CA 90012"));  //  true
+    // System.out.println(validateCityStateZip("Winston-Salem, NC 27101"));  //  true
+    // System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  //  true
 
-// System.out.println(validateCityStateZip("Seattle WA 98101"));  // ❌ false (Missing comma)
-// System.out.println(validateCityStateZip("San Francisco, California 94101"));  // ❌ false (Full state name not allowed)
-// System.out.println(validateCityStateZip("New York, NY10001"));  // ❌ false (No space before ZIP)
-// System.out.println(validateCityStateZip("Austin, TX 7330"));  // ❌ false (ZIP too short)
+    // System.out.println(validateCityStateZip("Seattle WA 98101"));  //  false (Missing comma)
+    // System.out.println(validateCityStateZip("San Francisco, California 94101"));  //  false (Full state name not allowed)
+    // System.out.println(validateCityStateZip("New York, NY10001"));  //  false (No space before ZIP)
+    // System.out.println(validateCityStateZip("Austin, TX 7330"));  //  false (ZIP too short)
 
-// System.out.println(validateCityStateZip("12345, TX 75001"));  // 🚫 false (City cannot be a number)
-// System.out.println(validateCityStateZip("Chicago, XX 60601"));  // 🚫 false (Invalid state abbreviation)
-// System.out.println(validateCityStateZip("Miami, FL"));  // 🚫 false (Missing ZIP code)
-// System.out.println(validateCityStateZip("New York- NY 10001"));  // 🚫 false (Wrong separator)
+    // System.out.println(validateCityStateZip("12345, TX 75001"));  //  false (City cannot be a number)
+    // System.out.println(validateCityStateZip("Chicago, XX 60601"));  //  false (Invalid state abbreviation)
+    // System.out.println(validateCityStateZip("Miami, FL"));  //  false (Missing ZIP code)
+    // System.out.println(validateCityStateZip("New York- NY 10001"));  //  false (Wrong separator)
+
+    //  4 Valid Military Time Test Cases (Should Return true)
+    // System.out.println(validateMilitaryTime("0000")); //  Midnight (12:00 AM)
+    // System.out.println(validateMilitaryTime("0930")); //  9:30 AM (Leading zero included)
+    // System.out.println(validateMilitaryTime("1200")); //  Noon (12:00 PM)
+    // System.out.println(validateMilitaryTime("2359")); //  Last valid minute of the day (11:59 PM)
+
+    // //4 False Test Cases (Incorrect Formatting but Possible)
+    // System.out.println(validateMilitaryTime("9:30")); //  false (Colons are not allowed)
+    // System.out.println(validateMilitaryTime("130"));  //  false (Must be exactly 4 digits, should be "0130")
+    // System.out.println(validateMilitaryTime("2400")); //  false (Military time does not use "24:00", should be "0000")
+    // System.out.println(validateMilitaryTime("9999")); //  false (Invalid hour and minute range)
+
+    // //  4 Invalid Test Cases (Completely Wrong Inputs)
+    // System.out.println(validateMilitaryTime("25:30")); //  false (Hour 25 is out of range)
+    // System.out.println(validateMilitaryTime("1980"));  //  false (Minute 80 is out of range)
+    // System.out.println(validateMilitaryTime("hello")); //  false (Not a number)
+    // System.out.println(validateMilitaryTime("5000"));  //  false (Hour 50 is out of range)
+
+     // 4 Valid Test Cases (Should Return true)
+    //System.out.println(validateCurrency("$0.99"));        //  true (Smallest valid amount)
+    //System.out.println(validateCurrency("$1,000.00"));    //  true (Proper thousands separator)
+    //System.out.println(validateCurrency("$12,345.67"));   //  true (Valid comma placement)
+    //System.out.println(validateCurrency("$999,999.99"));  //  true (Large valid amount)
+    //System.out.println(validateCurrency("$123,456,789.23"));
+
+    //  //  4 False Test Cases (Incorrect Formatting but Possible)
+    //  System.out.println(validateCurrency("123.45"));       //  false (Missing `$`)
+    //  System.out.println(validateCurrency("$1234.56"));     //  false (Missing comma)
+    //  System.out.println(validateCurrency("$12,34,567.89"));//  false (Incorrect comma placement)
+    //  System.out.println(validateCurrency("$123.456"));     //  false (Too many decimal places)
+
+    //  //  4 Invalid Test Cases (Completely Wrong Inputs)
+    //  System.out.println(validateCurrency("$1,234"));       //  false (Missing cents `.xx`)
+    //  System.out.println(validateCurrency("$0123.45"));     //  false (Leading zero issue)
+    //  System.out.println(validateCurrency("$-100.00"));     //  false (Negative values not supported)
+    //  System.out.println(validateCurrency("$12a,345.67"));  //  false (Letters inside numbers)
+
+    // //  Valid Test Cases
+    // System.out.println(validateURL("https://example.com"));  //  true
+    // System.out.println(validateURL("http://sub.domain.co.uk"));  //  true
+    // System.out.println(validateURL("www.website.org/path"));  //  true
+    // System.out.println(validateURL("https://my-site.io/about?user=123&sort=asc"));  //  true
+
+    // //  False Test Cases (Incorrectly formatted but possible URLs)
+    // System.out.println(validateURL("htp://wrong.url"));  //  false (Misspelled protocol)
+    // System.out.println(validateURL("example@website.com"));  //  false (This is an email)
+    // System.out.println(validateURL("https:/missing-slash.com"));  //  false (Only one slash after https)
+    // System.out.println(validateURL("http://-bad-.com"));  //  false (Hyphen in invalid position)
+
+    // //  Invalid Test Cases (Completely broken)
+    // System.out.println(validateURL("http://.invalid.com"));  // false (Domain cannot start with a dot)
+    // System.out.println(validateURL("http://site.c"));  //  false (TLD must be at least 2 characters)
+    // System.out.println(validateURL("https:// space.com"));  //  false (Space in domain)
+    // System.out.println(validateURL("http://example..com"));  //  false (Double dots not allowed)
+
+    // System.out.println(validateOddWord("station"));    //  true (7 letters, ends in "ion")
+    // System.out.println(validateOddWord("information"));   //  true (11 letters, ends in "ion")
+    // System.out.println(validateOddWord("evolution"));  //  true (9 letters, ends in "ion")
+    // System.out.println(validateOddWord("confusion"));   //  true (9 letters, ends in "ion")
+    // System.out.println(validateOddWord("ion"));        //  true (3 letters, ends in "ion")
+
+    // System.out.println("Testing false");
+    
+    // System.out.println(validateOddWord("lion"));      //  false (4 letters, even)
+    // System.out.println(validateOddWord("nation"));    //  false (6 letters, even)
+    // System.out.println(validateOddWord("vision"));    //  false (6 letters, even)
+    // System.out.println(validateOddWord("minion"));    //  false (6 letters, even)
+// Valid cases
+System.out.println("Valid passwords:");
+System.out.println("Xyz1!Hello: " + validatePassword("Xyz1!Hello"));      // true
+System.out.println("PassW0rd!123: " + validatePassword("PassW0rd!123"));  // true
+System.out.println("A!bcD1efGhi: " + validatePassword("A!bcD1efGhi"));    // true
+
+// Invalid cases
+System.out.println("\nInvalid passwords:");
+System.out.println("1234567890: " + validatePassword("1234567890"));      // false - no !
+System.out.println("abcdef1234: " + validatePassword("abcdef1234"));      // false - no ! and no uppercase
+System.out.println("ABCDEFGH1: " + validatePassword("ABCDEFGH1"));        // false - no ! and no lowercase
+System.out.println("Password123: " + validatePassword("Password123"));     // false - no !
+
     }
 
     // helper method to check if string matches regex pattern
@@ -122,7 +203,14 @@ System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  // ✅ tru
 
 
     private static boolean validateCurrency(String currency) { 
-        return false; 
+        if (isNullOrEmpty(currency)) return false;
+        currency = currency.trim();
+        String regex = "^"                // Start of the string
+        + "\\$"                        // Forced dollar sign
+        + "(?:0|[1-9]\\d{0,2}(?:,\\d{3})*)" // Whole number part (0 or formatted thousands)
+        + "\\.\\d{2}"                  // Decimal part (required, exactly two digits)
+        + "$";                         // End of the string
+        return regexChecker(regex, currency);
     }
     private static boolean validateDate(String date) { 
         if (isNullOrEmpty(date)) return false;
@@ -159,33 +247,61 @@ System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  // ✅ tru
     }
     
     private static boolean validateEmail(String email) { 
-        if(isNullOrEmpty(email)) return false;
-        email = email.trim();
-        String regex = "^(?!.*\\.\\.)([a-zA-Z0-9._%+-]{1,64})@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,})$";
-        return regexChecker(regex, email);
+        if (isNullOrEmpty(email)) return false;  // Check for null or empty input
+        
+        email = email.trim();  // Remove leading and trailing spaces
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        
+        return regexChecker(regex, email);  // Check if email matches regex
     }
 
     private static boolean validateMilitaryTime(String time) { 
-        return false; 
+        if(isNullOrEmpty(time)) return false;
+        time = time.trim();
+        String regex = 
+        "^(?:[01]\\d|2[0-3])" +  // Ensures the first two digits represent valid hours (00-23)
+        "[0-5]\\d" +              // Ensures the last two digits represent valid minutes (00-59)
+        "$";                      // End of string, ensuring exactly 4 digits and no extra characters
+        return regexChecker(regex, time);
     }
 
     private static boolean validateName(String name) { 
         /*
-         * Name on a class roster, assuming zero or more middle initials - Last name, First name, MI (e.g. Smith, John, L
-         * Mabota, Lwazi, M
+         * Name format: Last name, First name, MI
+         * - Allows zero or more middle initials
+         * - Example: Smith, John, L
+         * - Example: Mabota, Lwazi, M
          */
-        if(isNullOrEmpty(name)) return false;
-        name = name.trim();
-        String regex = "^[A-Z][a-zA-Z'-]*,\\s*[A-Z][a-zA-Z'-]*(,\\s*[A-Z])?$";
-        return regexChecker(regex, name);
+    
+        if (isNullOrEmpty(name)) return false;  // Check for null or empty input
+        
+        name = name.trim();  // Remove leading and trailing spaces
+        
+        String regex = "^"  // Start of string
+            + "[A-Z][a-zA-Z'-]*"  // Last name: Starts uppercase, allows hyphens & apostrophes
+            + ",\\s*"  // Ensures a comma followed by optional spaces
+            + "[A-Z][a-zA-Z'-]*"  // First name: Starts uppercase, allows hyphens & apostrophes
+            + "(,\\s*[A-Z])?"  // Optional middle initial: Single uppercase letter after comma
+            + "$";  // End of string
+        
+        return regexChecker(regex, name);  // Check if name matches regex
     }
-
-    private static boolean validateOddWord(String word) { 
-        return false; 
-    }
+        private static boolean validateOddWord(String word) { 
+            if (isNullOrEmpty(word)) return false; 
+            word = word.trim();
+            
+            String regex = "^(?:[a-z]{2})+[a-z]ion$";
+            
+            return regexChecker(regex, word); //  Directly return regexChecker result
+        }
 
     private static boolean validatePassword(String password) { 
-        return false; 
+        if (isNullOrEmpty(password)) return false;
+        password = password.trim();
+        String regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*!)" +
+               "(?!.*[a-z]{4,})[A-Za-z0-9!]{10,}$";
+    
+        return regexChecker(regex, password);
     }
 
     private static boolean validatePhoneNumber(String phoneNumber) { 
@@ -258,13 +374,14 @@ System.out.println(validateCityStateZip("O'Connor, TX 73301-1234"));  // ✅ tru
     return true;
 }
 
-// Extra Credit: Ensure the area number is valid according to SSA rules
-private static boolean isValidAreaNumber(int area) {
-    return area != 0 && area != 666 && (area < 900 || area > 999);
-}
 private static boolean validateURL(String url) { 
-        return false; 
+    if(isNullOrEmpty(url)) return false;
+    url = url.trim();
+    String regex = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+([\\/\\w .-]*)*$";
+    return regexChecker(regex, url);
     }
+
+
 
 // Helper method for leap year calculation
 private static boolean isLeapYear(int year) {
@@ -276,8 +393,27 @@ private static boolean isLeapYear(int year) {
     }
     return false;
 }
+public static boolean validateAddress(String address) { 
+    if (address == null || address.trim().isEmpty()) return false;
+    
+    address = address.trim();
+
+    // Updated regex pattern for address validation
+    String regex = "^"
+        + "(?!0\\d)\\d{1,5}"                     // 1 to 5-digit street number, no leading zeros
+        + "\\s+"                                 // At least one space after the number
+        + "(?=.*[A-Za-z])[A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*" // Street name must contain at least 1 letter
+        + "\\s+"                                 // Space before street type
+        + "(?i)(Street|St|Avenue|Ave|Boulevard|Blvd|Road|Rd)$"; // Case-insensitive street types
+
+    return address.matches(regex);
+}
 // Extra Credit: Ensure the area code is valid according to Area code rules
 private static boolean isValidAreaCode(int areaCode){
     return areaCode >= 200 && areaCode <= 999 && areaCode != 911 && areaCode != 555 && areaCode % 100 != 00;
+}
+// Extra Credit: Ensure the area number is valid according to SSA rules
+private static boolean isValidAreaNumber(int area) {
+    return area != 0 && area != 666 && (area < 900 || area > 999);
 }
 }
