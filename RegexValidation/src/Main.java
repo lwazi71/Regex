@@ -249,13 +249,17 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
         return true; // Everything is valid
     }
     
-    private static boolean validateEmail(String email) { 
+    public static boolean validateEmail(String email) { 
         if (isNullOrEmpty(email)) return false;  // Check for null or empty input
         
         email = email.trim();  // Remove leading and trailing spaces
-        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        
-        return regexChecker(regex, email);  // Check if email matches regex
+    
+        String regex = "^[A-Za-z0-9][A-Za-z0-9._%+-]*[A-Za-z0-9]@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    
+        boolean isValidFormat = regexChecker(regex, email);
+        boolean hasConsecutiveDots = email.split("@")[0].contains("..");
+    
+        return isValidFormat && !hasConsecutiveDots;
     }
 
     private static boolean validateMilitaryTime(String time) { 

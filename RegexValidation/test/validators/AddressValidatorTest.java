@@ -1,8 +1,7 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.*
-;
+import org.junit.*;
 public class AddressValidatorTest {
     @Test
     public void testValidAddressSimple() { 
