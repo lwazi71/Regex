@@ -171,11 +171,13 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
         return input == null || input.trim().isEmpty();
     }
 
-    private static boolean validateCityStateZip(String input) { 
+    public static boolean validateCityStateZip(String input) { 
         if (isNullOrEmpty(input)) return false;
-        input = input.trim();
-
-        //  List of all 50 U.S. state abbreviations
+        
+        // Normalize spaces: replace multiple spaces with a single space
+        input = input.trim().replaceAll("\\s+", " ");
+    
+        // List of all 50 U.S. state abbreviations
         List<String> stateAbbreviations = Arrays.asList(
             "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
             "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
@@ -183,36 +185,37 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
             "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
             "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
         );
-
-        //  Convert list into a regex-friendly format (AL|AK|AZ|...)
+    
+        // Convert list into a regex-friendly format (AL|AK|AZ|...)
         String stateRegex = String.join("|", stateAbbreviations);
-
-        //  Build regex dynamically with all 50 states
-        String regex = "^"
-            + "[A-Z][a-z']+" //  First letter uppercase, allows apostrophes ('Connor)
-            + "(?:\\s+[A-Z][a-z']*)*" //  Allows multi-word cities, apostrophes (New York, San O'Neill)
-            + "(?:-\\s*[A-Z][a-z']+)*" //  Allows hyphenated city names (Winston-Salem)
-            + ",\\s+" //  Comma and space after city
-            + "(" + stateRegex + ")\\s" //  Only valid U.S. states
-            + "\\d{5}" //  5-digit ZIP code
-            + "(-\\d{4})?" //  Allows optional ZIP+4 format (-1234)
+    
+        // Regex for City, State, ZIP
+        String regex = "^(?i)" // Case-insensitive match
+            + "[A-Za-z][a-z']*" // First letter uppercase, allows apostrophes
+            + "(?:\\s+[A-Za-z][a-z']*)*" // Allows multi-word cities (New York)
+            + "(?:-\\s*[A-Za-z][a-z']+)*" // Allows hyphenated city names (Winston-Salem)
+            + ",\\s*" // Comma with optional spaces after city
+            + "(" + stateRegex + ")\\s" // Valid state abbreviations
+            + "\\d{5}" // 5-digit ZIP code
+            + "(-\\d{4})?" // Allows optional ZIP+4 format (-1234)
             + "$";
-
+    
         return regexChecker(regex, input);
     }
 
-
-    private static boolean validateCurrency(String currency) { 
+    public static boolean validateCurrency(String currency) { 
         if (isNullOrEmpty(currency)) return false;
         currency = currency.trim();
-        String regex = "^"                // Start of the string
-        + "\\$"                        // Forced dollar sign
-        + "(?:0|[1-9]\\d{0,2}(?:,\\d{3})*)" // Whole number part (0 or formatted thousands)
-        + "\\.\\d{2}"                  // Decimal part (required, exactly two digits)
-        + "$";                         // End of the string
+        
+        String regex = "^"                   
+            + "\\$"                            // Dollar sign
+            + "(?:0|[1-9]\\d{0,2}(?:,\\d{3})*|[1-9]\\d*)" // Whole number part (allows commas OR no commas)
+            + "\\.\\d{2}"                      // Decimal part (exactly two digits)
+            + "$";
+    
         return regexChecker(regex, currency);
     }
-    private static boolean validateDate(String date) { 
+    public static boolean validateDate(String date) { 
         if (isNullOrEmpty(date)) return false;
     
         date = date.trim();
@@ -303,43 +306,35 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
     
         return regexChecker(regex, password);
     }
-
-    private static boolean validatePhoneNumber(String phoneNumber) { 
-         // valid phone number (123) 456-7890 123-456-7890 123.456.7890 123456789 +1 123-456-7890
-
-         if(isNullOrEmpty(phoneNumber)) return false; 
-         // remove leading and trailing spaces
-         phoneNumber = phoneNumber.trim();
-
-        //define the regex pattern, ensures that phone number area code (XXX), seperators space ` `, dash, `-`, or dot `.`
-        // Ensures 10 digits are present
-        // Ensure country code +1 is present
-        // Define regex pattern to validate US phone numbers (with extra credit)
-        String regex = 
-            "^\\+?1?" +          // Optional country code: "+1" or just "1" (can be omitted)
-            "[- .]?" +           // Optional separator after country code: "-", ".", or space
-            "\\(?([2-9][0-9]{2})\\)?" + // Valid area code: 3 digits (200-999), optional parentheses
-            "[- .]?" +           // Optional separator after area code: "-", ".", or space
-            "([2-9][0-9]{2})" +  // Valid exchange code: 3 digits (200-999), cannot start with 0 or 1
-            "[- .]?" +           // Optional separator after exchange code: "-", ".", or space
-            "(\\d{4})$";         // Last 4 digits of phone number (required)
-        if(!regexChecker(regex, phoneNumber)){
-            return false;
-        }
-            // remove the non-digit characters spaces and dashes
-        phoneNumber = phoneNumber.replaceAll("[^0-9]", ""); 
-        // extract components
-        int areaStr = Integer.parseInt(phoneNumber.substring(0,3));
-        int groupStr = Integer.parseInt(phoneNumber.substring(3,6));
-        int serialStr = Integer.parseInt(phoneNumber.substring(6));
-
-        if(!isValidAreaCode(areaStr) || groupStr == 0 || serialStr == 0) {
-            return false;
-        }
-        return true;
+    public static boolean validatePhoneNumber(final String phoneNumber) { 
+        if (isNullOrEmpty(phoneNumber)) return false;
         
+        String trimmedPhone = phoneNumber.trim();
+    
+        // Define regex for US phone number format with optional separators
+        String rgx = "^\\+?1?[-.\\s]?\\(?([2-9][0-9]{2})\\)?[-.\\s]?([2-9][0-9]{2})[-.\\s]?(\\d{4})$";
+        // Ensured exchange code cannot start with 0 or 1 → `([2-9][0-9]{2})`
+        // Ensured area code is valid from the start → `([2-9][0-9]{2})`
+        
+        if (!regexChecker(rgx, trimmedPhone)) return false;
+    
+        // Extract the numeric-only phone number
+        String digitsOnly = trimmedPhone.replaceAll("[^0-9]", "");
+        
+        if (digitsOnly.length() == 11 && digitsOnly.startsWith("1")) {
+            digitsOnly = digitsOnly.substring(1); // Remove leading country code "1" if present
+        }
+    
+        if (digitsOnly.length() != 10) return false;
+    
+        // Extract components
+        int areaCode = Integer.parseInt(digitsOnly.substring(0, 3));
+        int exchangeCode = Integer.parseInt(digitsOnly.substring(3, 6));
+        int serialNumber = Integer.parseInt(digitsOnly.substring(6));
+    
+        // Ensure all components are valid
+        return isValidAreaCode(areaCode) && exchangeCode >= 200 && serialNumber != 0;
     }
-
     private static boolean validateSSN(String ssn) { 
     if(isNullOrEmpty(ssn)) return false; 
     ssn = ssn.trim();
@@ -408,9 +403,11 @@ public static boolean validateAddress(String address) {
 
     return address.matches(regex);
 }
-// Extra Credit: Ensure the area code is valid according to Area code rules
-private static boolean isValidAreaCode(int areaCode){
-    return areaCode >= 200 && areaCode <= 999 && areaCode != 911 && areaCode != 555 && areaCode % 100 != 00;
+// Extra Credit area code
+private static boolean isValidAreaCode(int areaCode) {
+    return (areaCode >= 200 && areaCode <= 998)  // Fix: Changed to `998` to exclude `999`
+        && areaCode != 911  // Emergency
+        && areaCode != 555;  // Invalid for general use
 }
 // Extra Credit: Ensure the area number is valid according to SSA rules
 private static boolean isValidAreaNumber(int area) {
