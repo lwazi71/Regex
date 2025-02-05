@@ -17,6 +17,7 @@ public class URLValidatorTest {
     @Test
     public void testValidURLWithoutProtocol() { 
         assertTrue(Main.validateURL("example.com")); // No http/https, still valid
+
     }
 
     @Test

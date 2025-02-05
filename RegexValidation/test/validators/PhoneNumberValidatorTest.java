@@ -1,8 +1,9 @@
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+
 public class PhoneNumberValidatorTest {
+    
     @Test
     public void testValidPhoneNumberBasic() { 
         assertTrue(Main.validatePhoneNumber("678-707-9460")); // Standard format
@@ -43,8 +44,7 @@ public class PhoneNumberValidatorTest {
         assertTrue(Main.validatePhoneNumber("+1 (617) 456-7890")); // Mixed formatting with country code
     }
 
-
-    // ❌ 8 Invalid Cases (Including Official Area Code Restrictions)
+    
     @Test
     public void testInvalidPhoneNumberTooShort() { 
         assertFalse(Main.validatePhoneNumber("123-456-78")); // Not enough digits
@@ -81,25 +81,44 @@ public class PhoneNumberValidatorTest {
         assertFalse(Main.validatePhoneNumber("212-012-7890")); // Exchange code cannot start with 0
         assertFalse(Main.validatePhoneNumber("212-112-7890")); // Exchange code cannot start with 1
     }
+    
+    @Test
+    public void testValidPhoneNumberWithOfficialAreaCode() { 
+        assertTrue(Main.validatePhoneNumber("212-456-7890")); //  Extra Credit: NYC area code (Valid)
+    }
+
+    @Test
+    public void testValidPhoneNumberWithAnotherOfficialAreaCode() { 
+        assertTrue(Main.validatePhoneNumber("415-555-1234")); //  Extra Credit: San Francisco (Valid)
+    }
+
     @Test
     public void testInvalidPhoneNumberWithUnofficialAreaCodeLow() { 
-        assertFalse(Main.validatePhoneNumber("099-456-7890")); // Not a real area code
+        assertFalse(Main.validatePhoneNumber("099-456-7890")); //  Extra Credit: Not a real area code
     }
 
     @Test
     public void testInvalidPhoneNumberWithUnofficialAreaCodeHigh() { 
-        assertFalse(Main.validatePhoneNumber("999-456-7890")); // Not a real area code
+        assertFalse(Main.validatePhoneNumber("999-456-7890")); //  Extra Credit: Not a real area code
     }
 
     @Test
     public void testInvalidPhoneNumberWith911() { 
-        assertFalse(Main.validatePhoneNumber("911-456-7890")); // 911 is not a valid area code
+        assertFalse(Main.validatePhoneNumber("911-456-7890")); //  Extra Credit: 911 is not a valid area code
     }
 
     @Test
     public void testInvalidPhoneNumberWith555() { 
-        assertFalse(Main.validatePhoneNumber("555-456-7890")); // 555 is not a valid area code
+        assertFalse(Main.validatePhoneNumber("555-456-7890")); //  Extra Credit: 555 is not a valid area code
+    }
+
+    @Test
+    public void testInvalidPhoneNumberWithLeading1WithoutCountryCode() { 
+        assertFalse(Main.validatePhoneNumber("1-800-456-7890")); //  Extra Credit: Should fail if not formatted properly
+    }
+
+    @Test
+    public void testInvalidPhoneNumberWithRandomDigits() { 
+        assertFalse(Main.validatePhoneNumber("888-123-9999")); //  Extra Credit: Random number, possibly invalid area code
     }
 }
-
-    
