@@ -262,53 +262,56 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
         return isValidFormat && !hasConsecutiveDots;
     }
 
-    private static boolean validateMilitaryTime(String time) { 
+    public static boolean validateMilitaryTime(String time) { 
         if(isNullOrEmpty(time)) return false;
         time = time.trim();
-        String regex = 
-        "^(?:[01]\\d|2[0-3])" +  // Ensures the first two digits represent valid hours (00-23)
-        "[0-5]\\d" +              // Ensures the last two digits represent valid minutes (00-59)
-        "$";                      // End of string, ensuring exactly 4 digits and no extra characters
+        
+        String regex = "^(?!\\s)(?:[01]\\d|2[0-3])[0-5]\\d(?!\\s)$";
+    
         return regexChecker(regex, time);
     }
 
-    private static boolean validateName(String name) { 
-        /*
-         * Name format: Last name, First name, MI
-         * - Allows zero or more middle initials
-         * - Example: Smith, John, L
-         * - Example: Mabota, Lwazi, M
-         */
-    
+    public static boolean validateName(String name) { 
         if (isNullOrEmpty(name)) return false;  // Check for null or empty input
-        
-        name = name.trim();  // Remove leading and trailing spaces
-        
-        String regex = "^"  // Start of string
-            + "[A-Z][a-zA-Z'-]*"  // Last name: Starts uppercase, allows hyphens & apostrophes
+    
+        // Updated regex to ensure uppercase first letter for last name
+        String regex = "^"  
+            + "(?=[A-Z])"  // Ensure first character is uppercase
+            + "[A-Z][a-zA-Z'\\-]*(?:\\s+[A-Z][a-zA-Z'\\-]*)*"  // Last name (allows spaces in multi-word last names)
             + ",\\s*"  // Ensures a comma followed by optional spaces
-            + "[A-Z][a-zA-Z'-]*"  // First name: Starts uppercase, allows hyphens & apostrophes
-            + "(,\\s*[A-Z])?"  // Optional middle initial: Single uppercase letter after comma
+            + "[A-Z][a-zA-Z'\\-]*"  // First name: Starts uppercase, allows hyphens & apostrophes
+            + "(?:,\\s*[A-Z])?"  // Optional middle initial: Single uppercase letter after comma
             + "$";  // End of string
-        
+    
+        // **Ensure no leading or trailing spaces**
+        if (!name.equals(name.trim())) return false;
+    
         return regexChecker(regex, name);  // Check if name matches regex
     }
-        private static boolean validateOddWord(String word) { 
-            if (isNullOrEmpty(word)) return false; 
-            word = word.trim();
-            
-            String regex = "^(?:[a-z]{2})+[a-z]ion$";
-            
-            return regexChecker(regex, word); //  Directly return regexChecker result
-        }
-
-    private static boolean validatePassword(String password) { 
-        if (isNullOrEmpty(password)) return false;
-        password = password.trim();
-        String regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*!)" +
-               "(?!.*[a-z]{4,})[A-Za-z0-9!]{10,}$";
+    public static boolean validateOddWord(String input) {
+        if (isNullOrEmpty(input)) return false;  // Check for null or empty input
+        String regex = "(?i)" // Enable case-insensitive matching
+                + "^" // Ensure the match starts at the beginning of the string
+                + "([a-z]{2})+" // Match any sequence of even-length letter pairs
+                + "[a-z]" // Ensure the total length is odd by adding one extra letter
+                + "(?<=ion)" // Ensure the word ends with "ion"
+                + "$"; // Ensure the match extends to the end of the string
+        return regexChecker(regex, input);
+    }
+    public static boolean validatePassword(final String input) {
+    if (isNullOrEmpty(input)) return false;  // Check for null or empty input
     
-        return regexChecker(regex, password);
+        String rgx = "^" //
+                + "(?=.*[a-z])" //do we have at least one lower case?
+                + "(?=.*[A-Z])" // at least one upper case?
+                + "(?=.*\\d)" //at least one number?
+                + "(?=.*!)" //!?
+                + "(?!.*(.)\\1{2,})" 
+                + "[A-Za-z\\d!]"
+                + "{10,}" 
+                + "$"; //end of string reached
+
+        return regexChecker(rgx, input);
     }
     public static boolean validatePhoneNumber(final String phoneNumber) { 
         if (isNullOrEmpty(phoneNumber)) return false;
@@ -339,11 +342,10 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
         // Ensure all components are valid
         return isValidAreaCode(areaCode) && exchangeCode >= 200 && serialNumber != 0;
     }
-    private static boolean validateSSN(String ssn) { 
+    public static boolean validateSSN(String ssn) { 
     if(isNullOrEmpty(ssn)) return false; 
     ssn = ssn.trim();
 
-    // Define regex pattern to check valid SSN format (with extra credit)
     // Define regex pattern to check valid SSN format (with extra credit)
     String regex = 
         "^(?!000|666|9\\d{2})" +  // Area number (first 3 digits) cannot be 000, 666, or 900-999
@@ -373,7 +375,7 @@ System.out.println("Password123: " + validatePassword("Password123"));     // fa
     return true;
 }
 
-private static boolean validateURL(String url) { 
+public static boolean validateURL(String url) { 
     if(isNullOrEmpty(url)) return false;
     url = url.trim();
     String regex = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+([\\/\\w .-]*)*$";

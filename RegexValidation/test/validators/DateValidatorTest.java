@@ -75,6 +75,12 @@ public class DateValidatorTest {
     }
 
     @Test
+    public void testInvalidDateOutOfRangeDay2() { 
+        assertFalse(Main.validateDate("12-32-2023")); // April has 30 days
+    }
+
+
+    @Test
     public void testInvalidLeapYearFeb29NonLeap() { 
         assertFalse(Main.validateDate("02-29-2023")); // 2023 is not a leap year
     }
