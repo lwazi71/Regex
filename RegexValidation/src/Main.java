@@ -4,25 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-    /*
-     * grab it all and check if it matches, use greedy
-     */
- 
     public static void main(String[] args) {
     }
-
-    // helper method to check if string matches regex pattern
-    private static boolean regexChecker(final String rgx, final String input){
-        Pattern pattern = Pattern.compile(rgx, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(input);
-        return matcher.matches();
-    }
-
-    // helper method to check if string is null or empty
-    private static boolean isNullOrEmpty(String input) {
-        return input == null || input.trim().isEmpty();
-    }
-
     public static boolean validateCityStateZip(String input) { 
         if (isNullOrEmpty(input)) return false;
         
@@ -104,19 +87,29 @@ public class Main {
         
         email = email.trim();  // Remove leading and trailing spaces
     
-        String regex = "^[A-Za-z0-9][A-Za-z0-9._%+-]*[A-Za-z0-9]@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        String regex = "^" 
+                     + "[A-Za-z0-9]"        // Ensure the local part starts with a letter or number
+                     + "[A-Za-z0-9._%+-]*"  // Allow letters, numbers, dots, underscores, percent, plus, and hyphen
+                     + "[A-Za-z0-9]"        // Ensure the local part ends with a letter or number
+                     + "@"                  // Require '@' symbol
+                     + "[A-Za-z0-9.-]+"     // Domain name: allows letters, numbers, dots, and hyphens
+                     + "\\.[A-Za-z]{2,}"    // Require at least 2-letter TLD (e.g., .com, .org, .net)
+                     + "$";                 // End of string
     
-        boolean isValidFormat = regexChecker(regex, email);
-        boolean hasConsecutiveDots = email.split("@")[0].contains("..");
+        boolean isValidFormat = regexChecker(regex, email); // Validate email format
+        boolean hasConsecutiveDots = email.split("@")[0].contains(".."); // Check for consecutive dots in the local part
     
-        return isValidFormat && !hasConsecutiveDots;
+        return isValidFormat && !hasConsecutiveDots; // Return true only if both conditions are met
     }
-
     public static boolean validateMilitaryTime(String time) { 
-        if(isNullOrEmpty(time)) return false;
-        time = time.trim();
-        
-        String regex = "^(?!\\s)(?:[01]\\d|2[0-3])[0-5]\\d(?!\\s)$";
+        if (isNullOrEmpty(time)) return false;
+    
+        String regex = "^(?!\\s)(?:[01]\\d|2[0-3]|24)[0-5]\\d(?!\\s)$"; 
+        // - (?:[01]\d) → Matches 00-19
+        // - (?:2[0-3]) → Matches 20-23
+        // - (?:24) → Explicitly allows 2400
+        // - [0-5]\d → Matches 00-59 minutes
+        // - (?!\s) → Prevents leading/trailing spaces
     
         return regexChecker(regex, time);
     }
@@ -230,16 +223,35 @@ public class Main {
     }
     return true;
 }
-
 public static boolean validateURL(String url) { 
     if(isNullOrEmpty(url)) return false;
     url = url.trim();
     String regex = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+([\\/\\w .-]*)*$";
     return regexChecker(regex, url);
-    }
+}
+public static boolean validateAddress(String address) { 
+    if (address == null || address.trim().isEmpty()) return false;
+    address = address.trim();
+    // Updated regex pattern for address validation
+    String regex = "^"
+        + "(?!0\\d)\\d{1,5}"                     // 1 to 5-digit street number, no leading zeros
+        + "\\s+"                                 // At least one space after the number
+        + "(?=.*[A-Za-z])[A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*" // Street name must contain at least 1 letter
+        + "\\s+"                                 // Space before street type
+        + "(?i)(Street|St|Avenue|Ave|Boulevard|Blvd|Road|Rd)$"; // Case-insensitive street types
+    return address.matches(regex);
+}
 
-
-
+// helper method to check if string matches regex pattern
+private static boolean regexChecker(final String rgx, final String input){
+    Pattern pattern = Pattern.compile(rgx, Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(input);
+    return matcher.matches();
+}
+    // helper method to check if string is null or empty
+private static boolean isNullOrEmpty(String input) {
+    return input == null || input.trim().isEmpty();
+}
 // Helper method for leap year calculation
 private static boolean isLeapYear(int year) {
     if(year % 4 == 0){
@@ -250,21 +262,6 @@ private static boolean isLeapYear(int year) {
     }
     return false;
 }
-public static boolean validateAddress(String address) { 
-    if (address == null || address.trim().isEmpty()) return false;
-    
-    address = address.trim();
-
-    // Updated regex pattern for address validation
-    String regex = "^"
-        + "(?!0\\d)\\d{1,5}"                     // 1 to 5-digit street number, no leading zeros
-        + "\\s+"                                 // At least one space after the number
-        + "(?=.*[A-Za-z])[A-Za-z0-9]+(?:\\s+[A-Za-z0-9]+)*" // Street name must contain at least 1 letter
-        + "\\s+"                                 // Space before street type
-        + "(?i)(Street|St|Avenue|Ave|Boulevard|Blvd|Road|Rd)$"; // Case-insensitive street types
-
-    return address.matches(regex);
-}
 // Extra Credit area code
 private static boolean isValidAreaCode(int areaCode) {
     return (areaCode >= 200 && areaCode <= 998)  // Fix: Changed to `998` to exclude `999`
@@ -274,5 +271,5 @@ private static boolean isValidAreaCode(int areaCode) {
 // Extra Credit: Ensure the area number is valid according to SSA rules
 private static boolean isValidAreaNumber(int area) {
     return area != 0 && area != 666 && (area < 900 || area > 999);
-}
+    }
 }

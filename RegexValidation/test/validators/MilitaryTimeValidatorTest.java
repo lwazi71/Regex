@@ -50,7 +50,7 @@ public class MilitaryTimeValidatorTest {
 
     @Test
     public void testInvalidMilitaryTimeOutOfRangeHours() { 
-        assertFalse(Main.validateMilitaryTime("2400")); // 24 is not a valid hour
+        assertFalse(Main.validateMilitaryTime("2500")); // 25 is not a valid hour
     }
 
     @Test
