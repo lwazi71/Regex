@@ -7,13 +7,14 @@ public class Main {
     public static void main(String[] args) {
         
     }
+
     public static boolean validateCityStateZip(String input) { 
         if (isNullOrEmpty(input)) return false;
         
         // Normalize spaces: replace multiple spaces with a single space
         input = input.trim().replaceAll("\\s+", " ");
     
-        // List of all 50 U.S. state abbreviations
+        // List of all 50 U.S. state abbreviations extra credit as well. 
         List<String> stateAbbreviations = Arrays.asList(
             "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
             "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
@@ -40,7 +41,6 @@ public class Main {
     public static boolean validateCurrency(String currency) { 
         if (isNullOrEmpty(currency)) return false;
         currency = currency.trim();
-        
         String regex = "^"                   
             + "\\$"                            // Dollar sign
             + "(?:0|[1-9]\\d{0,2}(?:,\\d{3})*|[1-9]\\d*)" // Whole number part (allows commas OR no commas)
@@ -51,7 +51,6 @@ public class Main {
     }
     public static boolean validateDate(String date) { 
         if (isNullOrEmpty(date)) return false;
-    
         date = date.trim();
         String regex = "^"  // Start of the string
             + "(0[1-9]|1[0-2])"  // Match the month (01-12)
@@ -62,7 +61,6 @@ public class Main {
             + "$";                 // End of the string
     
         if (!regexChecker(regex, date)) return false;
-    
         // Extract date components
         String[] parts = date.split("[-/]");
         int month = Integer.parseInt(parts[0]); 
@@ -79,7 +77,6 @@ public class Main {
         if (month == 2) {
             if (day > 29 || (day == 29 && !isLeapYear(year))) return false;
         }
-    
         return true; // Everything is valid
     }
     
@@ -104,7 +101,6 @@ public class Main {
     }
     public static boolean validateMilitaryTime(String time) { 
         if (isNullOrEmpty(time)) return false;
-    
         String regex = "^(?!\\s)(?:[01]\\d|2[0-3]|24)[0-5]\\d(?!\\s)$"; 
         // - (?:[01]\d) → Matches 00-19
         // - (?:2[0-3]) → Matches 20-23
@@ -117,7 +113,6 @@ public class Main {
 
     public static boolean validateName(String name) { 
         if (isNullOrEmpty(name)) return false;  // Check for null or empty input
-    
         // Updated regex to ensure uppercase first letter for last name
         String regex = "^"  
             + "(?=[A-Z])"  // Ensure first character is uppercase
@@ -142,9 +137,9 @@ public class Main {
                 + "$"; // Ensure the match extends to the end of the string
         return regexChecker(regex, input);
     }
-    public static boolean validatePassword(final String input) {
+    public static boolean validatePassword(String input) {
         if (isNullOrEmpty(input)) return false;  // Check for null or empty input
-    
+        input = input.trim(); 
         String rgx = "^" //
                 + "(?=.*[a-z])" // At least one lowercase letter
                 + "(?=.*[A-Z])" // At least one uppercase letter
@@ -154,13 +149,13 @@ public class Main {
                 + "[A-Za-z\\d!]{10,}" // Accepts only letters, digits, and '!', with a minimum length of 10
                 + "$"; // End of string
         
-        // I am not using the helper method here becuase =
+        // I am not using the helper method here becuase = the case insensitive broke the upper and lower case tests
         Pattern pattern = Pattern.compile(rgx); // ⚠️ Removed `Pattern.CASE_INSENSITIVE`
         Matcher matcher = pattern.matcher(input);
         
         return matcher.matches();
     }
-    public static boolean validatePhoneNumber(final String phoneNumber) { 
+    public static boolean validatePhoneNumber(String phoneNumber) { 
         if (isNullOrEmpty(phoneNumber)) return false;
         
         String trimmedPhone = phoneNumber.trim();
