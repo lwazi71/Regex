@@ -1,0 +1,8 @@
+Lwazi Mabota
+TCSS 483 Winter 2025
+
+README: Regular Expression Validator
+
+For this project, I implemented regular expressions to validate various inputs like SSNs, phone numbers, emails, names, dates, addresses, military time, currency, URLs, passwords, and odd-length words ending in "ion." In some of the regex I used look-aheads and look-behinds which were a concept not taught within lecture but I did research on this topic through my studies of the regex, I've included documentation on it here(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion), (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion) 
+
+  I also tackled some extra credit by enforcing Social Security Administration rules for SSNs, restricting phone numbers to valid area codes, and ensuring state abbreviations in city-state-ZIP formatting were correct. I collaborated with Murad and Sopheanith, and we shared unit tests with the class. The class made a google doc full of unit tests we worked on together, which is why some of my unit tests might look similar to another student's. To run my code you will need to run the unit tests and connect them to main as the unit tests depend on main, I believe my project structure handles this. My implementation was tested thoroughly, achieving 100% code coverage, and all unit tests passed. A PDF with test results and coverage is attached, along with screenshots of successful test cases. Let me know if anything needs clarification. Thanks!

@@ -9,6 +9,12 @@ public class PassWordValidationTest {
         assertTrue(Main.validatePassword("Abc!123456")); // Exactly 10 characters, meets all conditions
     }
 
+
+    @Test
+    public void testValidPassword() { 
+        assertTrue(Main.validatePassword("Ipadmini7!")); // Exactly 10 characters, meets all conditions
+    }
+
     @Test
     public void testValidPasswordExceedsMinimumLength() { 
         assertTrue(Main.validatePassword("XyZ!45678abc")); // More than 10 characters, still valid

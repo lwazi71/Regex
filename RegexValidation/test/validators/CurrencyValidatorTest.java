@@ -84,4 +84,9 @@ public class CurrencyValidatorTest {
     public void testInvalidCurrencyNegativeAmount() { 
         assertFalse(Main.validateCurrency("-$123.45"));  // Negative sign before $
     }
+
+    @Test
+    public void testInvalidCurrencyMissingWholeNumber() { 
+        assertFalse(Main.validateCurrency("$.99"));  // Missing whole number part, should fail
+    }
 }

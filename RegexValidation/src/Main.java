@@ -5,10 +5,11 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // empty main method, nothing here since all the running happens in the tests files.
         
     }
-
     public static boolean validateCityStateZip(String input) { 
+        // Check for null or empty input
         if (isNullOrEmpty(input)) return false;
         
         // Normalize spaces: replace multiple spaces with a single space
@@ -38,7 +39,8 @@ public class Main {
     
         return regexChecker(regex, input);
     }
-    public static boolean validateCurrency(String currency) { 
+    public static boolean validateCurrency(String currency) {
+        // Check if currency is valid
         if (isNullOrEmpty(currency)) return false;
         currency = currency.trim();
         String regex = "^"                   
@@ -50,6 +52,7 @@ public class Main {
         return regexChecker(regex, currency);
     }
     public static boolean validateDate(String date) { 
+        // Check if date is valid
         if (isNullOrEmpty(date)) return false;
         date = date.trim();
         String regex = "^"  // Start of the string
@@ -67,7 +70,7 @@ public class Main {
         int day = Integer.parseInt(parts[1]);
         int year = Integer.parseInt(parts[2]);
     
-        //  Fix: Ensure the year is within a valid range (e.g., 1000 - 9999)
+        // Ensure the year is within a valid range (e.g., 1000 - 9999)
         if (year < 1000 || year > 9999) return false;
     
         // Validate months with 30 days
@@ -100,6 +103,7 @@ public class Main {
         return isValidFormat && !hasConsecutiveDots; // Return true only if both conditions are met
     }
     public static boolean validateMilitaryTime(String time) { 
+        // Check if time is null or empty
         if (isNullOrEmpty(time)) return false;
         String regex = "^(?!\\s)(?:[01]\\d|2[0-3]|24)[0-5]\\d(?!\\s)$"; 
         // - (?:[01]\d) → Matches 00-19
@@ -188,6 +192,7 @@ public class Main {
         return isValidAreaCode(areaCode) && exchangeCode >= 200 && serialNumber != 0;
     }
     public static boolean validateSSN(String ssn) { 
+    // Check if the ssn is empty or null
     if(isNullOrEmpty(ssn)) return false; 
     ssn = ssn.trim();
 
@@ -220,12 +225,20 @@ public class Main {
     return true;
 }
 public static boolean validateURL(String url) { 
+    // check if url is empty or null
     if(isNullOrEmpty(url)) return false;
     url = url.trim();
-    String regex = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+([\\/\\w .-]*)*$";
+    String regex = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+([\\/\\w .-]*)*$"; // ^ Ensures the string starts here
+    // (https?:\\/\\/)? Matches optional "http://" or "https://" (the "s?" allows both)
+    // (www\\.)? Matches optional "www."
+    // [a-zA-Z0-9-]+ Matches the main domain name (letters, numbers, and hyphens allowed)
+    // (\\.[a-zA-Z]{2,})+ Ensures at least one dot followed by a valid domain extension (.com, .org, etc.), with at least 2 letters
+    // ([\\/\\w .-]*)* Matches an optional path after the domain (allows slashes, alphanumeric characters, spaces, dots, and hyphens)
+    // $ Ensures the match extends to the end of the string
     return regexChecker(regex, url);
 }
 public static boolean validateAddress(String address) { 
+    // check if address is empty or null
     if (address == null || address.trim().isEmpty()) return false;
     address = address.trim();
     // Updated regex pattern for address validation
@@ -240,6 +253,7 @@ public static boolean validateAddress(String address) {
 
 // helper method to check if string matches regex pattern
 private static boolean regexChecker(final String rgx, final String input){
+    // Compile the regex pattern and match it against the input
     Pattern pattern = Pattern.compile(rgx, Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(input);
     return matcher.matches();
